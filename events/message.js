@@ -35,7 +35,7 @@ if(member){
 		}
 
 				    var msgo = message.content.toLowerCase();
-				if (msgo.includes('nigga')) {
+				if (msgo.includes('Nword')) {
 				message.delete()
         message.channel.send(`**<a:smacc:778510510500347955> Shush.. Stop saying that Or you will get a chance to visit banland. <a:smacc:778510510500347955>**`).then(msg => msg.delete({ timeout: 10000 }));
 				message.author.send('**Stop saying that word please..**')}
