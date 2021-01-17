@@ -1,0 +1,13 @@
+const Client = require('../Client/Client')
+const Discord = require('discord.js')
+const signatureblue = '0070FF'
+
+module.exports = {
+  name: '',
+  run: async(client, message, args) => {
+    
+  },
+  aliases: [''],
+  description: '',
+  usage: ``
+}
