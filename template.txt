@@ -1,4 +1,4 @@
-const Client = require('../Client/Client')
+const Client = require('../Client/Client') /** Just a Template if i want to make a new command */
 const Discord = require('discord.js')
 const signatureblue = '0070FF'
 
