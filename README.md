@@ -19,3 +19,4 @@ json.sqlite and eco.sqlite is nothing... Delete it.
 ## Note: You need .env File for start the bot because it contains Bot Token.. Found in Discord Application website.
 
 ### Please Dont be dumb like me and make the bot.
+**And Thank you for seeing my repo**
