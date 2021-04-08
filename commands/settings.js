@@ -1,4 +1,4 @@
-const Client = require('../Client/Client')
+
 const Discord = require('discord.js')
 const signatureblue = '0070FF'
 const db = require('quick.db')
@@ -7,7 +7,7 @@ module.exports = {
   name: 'setting',
   run: async(client, message, args) => {
 		if(!message.member.hasPermission('ADMINISTRATOR')){message.reply('You dont have permission to change any guild settings OOF')} else {
-			let settings = args[0]
+let settings = args[0]
 			let tof = args[1]
 
 			if(!settings){
@@ -25,52 +25,30 @@ module.exports = {
 			} else
 
 			if(settings === 'antiswear'){
-				if(tof === 'true'){
+				if(tof === 'on'){
 
         db.set(`swear.${message.guild.id}`, 1)
 
 				message.reply('I have changed the \`\`antiswear\`\` to ON')
 				} 
-				else if(tof === 'on'){
-
-        db.set(`swear.${message.guild.id}`, 1)
-
-				message.reply('I have changed the \`\`antiswear\`\` to ON')
-				}
-				 else if(tof === 'false'){
-
-				db.delete(`swear.${message.guild.id}`, 1)
-
-				message.reply('I have changed the \`\`antiswear\`\` to OFF')
-				} else if(tof === 'off'){
+				 else if(tof === 'off'){
 
 				db.delete(`swear.${message.guild.id}`, 1)
 
 				message.reply('I have changed the \`\`antiswear\`\` to OFF')
 				}
-				 else {message.reply('WOT ?? is that true or false ?? IDK')}
+				 else {message.reply('WOT ?? is that on or off ?? IDK')}
 			}
 		
 			 else 
 				if(settings === 'antiad'){
-				if(tof === 'true'){
-
-        db.add(`ad.${message.guild.id}`, 1)
-
-				message.reply('I have changed the \`\`antiad\`\` to ON')
-				} 
-				else if(tof === 'on'){
+			if(tof === 'on'){
 
         db.add(`ad.${message.guild.id}`, 1)
 
 				message.reply('I have changed the \`\`antiad\`\` to ON')
 				}
-				 else if(tof === 'false'){
-
-				db.delete(`ad.${message.guild.id}`, 1)
-
-				message.reply('I have changed the \`\`antiad\`\` to OFF')
-				} else if(tof === 'off'){
+				 if(tof === 'off'){
 
 				db.delete(`ad.${message.guild.id}`, 1)
 
@@ -78,11 +56,24 @@ module.exports = {
 				}
 				 else {message.reply('WOT ?? is that true or false ?? IDK')}
 
-				}else {message.reply('Is that even a setting ?? idk')}
+				} else if(settings === 'level'){
+          if(tof === 'on'){
+
+        db.add(`levels.${message.guild.id}`, 1)
+
+				message.reply('Now i will send messages when levelling up')
+				} else if(tof === 'off'){
+
+        db.delete(`levels.${message.guild.id}`, 1)
+
+				message.reply('Now i wont send messages when levelling up')
+				} else {message.reply('WOT ?? is that true or false ?? IDK')}
+
+        } else {message.reply('Is that even a setting ?? idk')}
 		}
 
   },
   aliases: ['settings'],
   description: 'Change some guild settings',
-  usage: `/setting <thing> <true/false>`
+  usage: `/setting <thing> <on/off>`
 }

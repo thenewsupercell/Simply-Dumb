@@ -1,31 +1,37 @@
-const Client = require('../Client/Client')
+
 const Discord = require('discord.js')
 module.exports = {
   name: 'kick',
   run: async(client, message, args) => {
 
-		if (!message.member.hasPermission("KICK_MEMBERS")) return message.reply("You dont have permissions to kick them")
+	if (!message.member.hasPermission("KICK_MEMBERS")) return message.reply("You dont have permissions to kick them")
+   let member = message.mentions.members.first();
+if (!member)
+  return message.reply("I cant kick the air.. Thats not possible. So, Please mention a valid member of this server");
+if (!member.kickable)
+  return message.reply(
+    "I cannot kick this user! Do they have a higher role? Do I have kick permissions?"
+  );
 
-    let kickvictim = message.mentions.members.first() || message.guild.members.cache.get(args[0])
+let reason = args.slice(1).join(" ");
+if (!reason) reason = "No reason provided";
 
-        if (!kickvictim) { message.reply("Kick what ?? Kick you.. Wait i wont.. So Mention a user (Only Moderators can Kick/Ban)") }
+const Emb = new Discord.MessageEmbed()
+.setTitle('Kicked')
+.setDescription(`${member.user.tag} has been **kicked** by ${message.author.tag} because: **${reason}**`)
+.setFooter(`Their User Id: ${member.user.id}`)
+.setColor(signatureblue)
 
-        const kickemb = new Discord.MessageEmbed()
-            .setDescription(`:thumbsup: ${kickvictim.user.tag} has been Kicked by ${message.author}`)
-            .setColor(0x28a745)
-            .setFooter(`Kicked by ${message.author.username}`)
-						
-        if (!message.guild.me.hasPermission("ADMINISTRATOR")) return message.reply("I dont have permission to kick them")
-        if (message.mentions.members.first().hasPermission("ADMINISTRATOR")) return message.reply("I cant kick a admin.. Please remove his/her admin")
-        if (message.mentions.members.first() === message.author) return message.reply("You cant kick yourself . _.")
-
-
-        if (kickvictim) {
-            kickvictim.kick({
-                reason: reasonkick
-            })
-            message.channel.send(kickemb)
-        }
+await member
+  .kick({reason: reason})
+  .catch(error =>
+    message.reply(
+      `Sorry ${message.author} I couldn't kick because of : ${error}`
+    )
+  );
+message.channel.send(
+  Emb
+);
       },
   description: 'Kicks a user if the author is moderator',
   usage: `/kick <user>`

@@ -1,5 +1,6 @@
-const Client = require('../Client/Client')
+
 const Discord = require('discord.js')
+
 module.exports = {
   name: 'slap',
   run: async(client, message, args) => {

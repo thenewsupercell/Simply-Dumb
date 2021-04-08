@@ -3,6 +3,7 @@ const Discord = require('discord.js')
 const db = require('quick.db')
 const fs = require('fs')
 const signatureblue = '0070FF'
+const rss = require('rss-converter');
 
 module.exports = {
   name: 'message',
@@ -17,6 +18,8 @@ let bonus = 0
 if(member){
 	bonus = 5
 }
+const lvlmsg = await db.fetch(`levels.${message.guild.id}`, 1)
+if(lvlmsg !== null){
 		const randomNumber = Math.floor(Math.random() * 10) + 15 + bonus
 		db.add(`xp_${message.guild.id}_${message.author.id}`, randomNumber)
 		db.add(`xptotal_${message.guild.id}_${message.author.id}`, randomNumber)
@@ -31,11 +34,14 @@ if(member){
 			.setDescription(`${message.author} has Reached Level ${newLevel}.. GG`)
 			.setFooter('Gimme some xp pls')
 			.setColor(signatureblue)
+
+      
 			message.reply(levelemb)
+      }
 		}
 
 				    var msgo = message.content.toLowerCase();
-				if (msgo.includes('Nword')) {
+				if (msgo.includes('nigga')) {
 				message.delete()
         message.channel.send(`**<a:smacc:778510510500347955> Shush.. Stop saying that Or you will get a chance to visit banland. <a:smacc:778510510500347955>**`).then(msg => msg.delete({ timeout: 10000 }));
 				message.author.send('**Stop saying that word please..**')}
@@ -89,10 +95,20 @@ if(member){
 			 afk.delete(message.author.id, message.guild.id)
 		 }
 
+         if (message.content.includes("@here") || message.content.includes("@everyone")) return;
+             if (message.mentions.has(client.user.id)) {
+        message.channel.send("Hey.. My Prefix is s! if you forget..").then(i => i.delete({timeout: 10000}))
+    };
+    
    const [ cmd, ...args ] = message.content.slice(client.prefix.length).trim().split(/ +/g);
    const command = client.getCommand(cmd.toLowerCase());
    if(!command) return;
-   if(message.content.startsWith(`/${cmd}`)){
+   
+   if(message.content.toLowerCase().startsWith(`s!${cmd}`)){
+       
+     const Allowed = await db.fetch(`CommandOn_${message.guild.id}_${cmd.toLowerCase()}`);
+  if (Allowed !== null) return;
+
    command.run(client, message, args).catch(e => console.log(e))
 	 }
   }

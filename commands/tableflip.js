@@ -1,5 +1,5 @@
 const{MessageEmbed} = require('discord.js');
-const Client = require('../Client/Client')
+
 const Discord = require('discord.js')
 const signatureblue = '0070FF'
 const fetch = require('node-fetch');

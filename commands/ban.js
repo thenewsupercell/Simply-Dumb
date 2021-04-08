@@ -1,34 +1,38 @@
-const Client = require('../Client/Client')
+
 const Discord = require('discord.js')
 const signatureblue = '0070FF'
 
 module.exports = {
   name: 'ban',
   run: async(client, message, args) => {
+if (!message.member.hasPermission("BAN_MEMBERS")) return message.reply("You dont have permissions to ban them")
+   let member = message.mentions.members.first();
+if (!member)
+  return message.reply("I cant ban the air.. Thats not possible. So, Please mention a valid member of this server");
+if (!member.bannable)
+  return message.reply(
+    "I cannot ban this user! Do they have a higher role? Do I have ban permissions?"
+  );
 
-    let banvictim = message.mentions.members.first() || message.guild.members.cache.get(args[0])
+let reason = args.slice(1).join(" ");
+if (!reason) reason = "No reason provided";
 
-        if (!banvictim) { message.reply("Ban what ?? Ban you.. Wait i wont.. So Mention a user (Only Moderators can Ban/Kick)") }
+const Emb = new Discord.MessageEmbed()
+.setTitle('Banned')
+.setDescription(`${member.user.tag} has been **banned** by ${message.author.tag} because: **${reason}**`)
+.setFooter(`Want to unban them ? Use s!unban <userID>\nUser Id: ${member.user.id}`)
+.setColor(signatureblue)
 
-        const reasonban = "Breaking Rules"
-
-        const banemb = new Discord.MessageEmbed()
-            .setDescription(`:thumbsup: ${banvictim.user.tag} has been Banned by ${message.author}`)
-            .setColor(0x28a745)
-            .setFooter(`Banned by ${message.author.username}`)
-
-        if (!message.member.hasPermission("BAN_MEMBERS")) return message.reply("You dont have permissions to ban them")
-        if (!message.guild.me.hasPermission("ADMINISTRATOR")) return message.reply("I dont have permission to ban them")
-        if (message.mentions.members.first().hasPermission("ADMINISTRATOR")) return message.reply("I cant ban a admin.. Please remove his/her admin")
-        if (message.mentions.members.first() === message.author) return message.reply("You cant ban yourself . _.")
-
-
-        if (banvictim) {
-            banvictim.ban({
-                reason: "Breaking rules"
-            })
-            message.channel.send(banemb)
-        }
+await member
+  .ban({reason: reason})
+  .catch(error =>
+    message.reply(
+      `Sorry ${message.author} I couldn't ban because of : ${error}`
+    )
+  );
+message.channel.send(
+  Emb
+);
       },
   description: 'Bans a user',
   usage: `/ban <mention>`

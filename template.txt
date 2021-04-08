@@ -1,13 +1,13 @@
-const Client = require('../Client/Client') /** Just a Template if i want to make a new command */
+const Client = require('../Client/Client')
 const Discord = require('discord.js')
 const signatureblue = '0070FF'
+const db = require('quick.db')
 
 module.exports = {
   name: '',
   run: async(client, message, args) => {
     
   },
-  aliases: [''],
-  description: '',
-  usage: ``
+  description: "",
+  usage: ""
 }

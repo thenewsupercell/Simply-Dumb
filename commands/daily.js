@@ -1,42 +1,44 @@
-const Client = require('../Client/Client')
 const Discord = require('discord.js')
 const signatureblue = '0070FF'
-const { EconomyManager } = require("quick.eco")
-const eco = new EconomyManager({
-    adapter: 'sqlite'
-});
-const ms = require('ms')
+
+const db = require('quick.db')
+const ms = require('parse-ms')
 
 module.exports = {
   name: 'daily',
   run: async(client, message, args) => {
-let user = message.author;
-const homeGuild = client.guilds.cache.get('772814149155553280')
-const member = homeGuild.member(user);
-let bonus = 0
+  let user = message.author;
 
-if(member){
-	bonus = 200
-	console.log('hehe')
-}
+  let timeout = 86400000;
 
-let add = await eco.daily(message.author.id, false, 1000 + bonus);
-				 const noembed = new Discord.MessageEmbed()
-				.setTitle('💸 Daily Reward 💸')
-				.setDescription(` 💸 You claimed ${add.amount} as your daily cash 💸\n And now you have total ${add.money} cash  💸.`)
-				.setColor(signatureblue)
-				.setFooter('Wow..')
+  let daili = Math.floor(Math.random() * 200) + 1;
+  let multiplier = await db.fetch(`multiplier_${message.guild.id}`);
+  if(!multiplier) multiplier = 1;
+  let dailies =  daili * multiplier;
 
-        if (add.cooldown)  {
-					        const embed = new Discord.MessageEmbed()
-				.setTitle('💸 Oh no.. 💸')
-				.setDescription(`You already claimed your daily cash. Come back after ${add.time.days} days, ${add.time.hours} hours, ${add.time.minutes} minutes & ${add.time.seconds} seconds.`)
-				.setColor(signatureblue)
-				.setFooter('Meanwhile.. Join the support server. And get some boost')
-				
-				message.reply(embed);}
+  let daily = await db.fetch(`daily_${message.guild.id}_${user.id}`);
 
-        else{ message.reply(noembed);}
+  if (daily !== null && timeout - (Date.now() - daily) > 0) {
+    let time = ms(timeout - (Date.now() - daily));
+  
+    let timeEmbed = new Discord.MessageEmbed()
+    .setColor(signatureblue)
+    .setDescription(`❌ You've **already collected** your daily reward ❌\n\nCollect it again in **${time.hours}h ${time.minutes}m ${time.seconds}s** `);
+    message.channel.send(timeEmbed)
+  } else {
+    
+    let moneyEmbed = new Discord.MessageEmbed()
+  .setColor(signatureblue)
+  .setTitle('💸 Daily Reward 💸')
+  .setDescription(`You've collected your daily reward of **${dailies} <:DumbCoin:828912273786667019>**`);
+  
+  await db.add(`money_${message.guild.id}_${user.id}.pocket`, dailies);
+  await db.set(`daily_${message.guild.id}_${user.id}`, Date.now());
+
+  message.channel.send(moneyEmbed)
+  
+
+		}
   },
   description: 'Gives daily reward',
   usage: `/daily`

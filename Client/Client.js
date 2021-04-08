@@ -10,7 +10,7 @@ class Cliento extends Client{
     this.events = new Collection();
     this.description = new Collection();
     this.usage = new Collection()
-    this.prefix = '/'
+    this.prefix = 's!'
   };
   getCommand(cmd) {
     return this.commands.get(cmd) || this.commands.get(this.aliases.get(cmd));
